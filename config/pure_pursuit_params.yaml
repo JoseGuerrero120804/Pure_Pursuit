@@ -1,0 +1,22 @@
+pure_pursuit_controller:
+  ros__parameters:
+    path_file: /home/nombre_usuario/waypoints.csv
+    odom_topic: /odom
+    cmd_vel_topic: /cmd_vel
+
+    wheelbase: 2.68   # Can be changed depending on the actual wheelbase of the vehicle
+    # Dynamic look-ahead: P = lookahead_gain * v_x, floored at min_lookahead_distance.
+    lookahead_gain: 1.0
+    min_lookahead_distance: 0.5
+
+    # Speed is reduced through curves (heading change >= curve_curvature_threshold
+    # between consecutive path segments), which makes v_x -- and therefore P --
+    # vary dynamically along the path instead of staying constant.
+    linear_velocity: 1.0
+    linear_velocity_curve: 0.5
+    curve_curvature_threshold: 0.1  # rad/m (~10 m turn radius)
+
+    goal_tolerance: 0.3
+    max_angular_velocity: 2.0
+    control_rate: 20.0
+    search_window: 50

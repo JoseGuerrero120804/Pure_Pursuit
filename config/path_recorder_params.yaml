@@ -1,0 +1,6 @@
+path_recorder:
+  ros__parameters:
+    odom_topic: /odom
+    output_file: /home/nombre_usuario/waypoints.csv
+    min_distance: 0.2
+    max_jump_distance: 1.0
