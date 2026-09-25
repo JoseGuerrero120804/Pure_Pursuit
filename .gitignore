@@ -1,1 +1,21 @@
+# Editor / IDE
 .vscode/
+.idea/
+*.swp
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# ROS 2 / colcon build outputs
+build/
+install/
+log/
+
+# Recorded data
+*.bag
+*.db3
+*.mcap
