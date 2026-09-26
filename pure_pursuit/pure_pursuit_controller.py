@@ -136,12 +136,22 @@ class PurePursuitController(Node):
 
         target, target_idx = self._find_lookahead_point(x, y, P)
 
-        dist_to_goal = math.hypot(self.path[-1][0] - x, self.path[-1][1] - y)
-        if target_idx == len(self.path) - 1 and dist_to_goal < self.goal_tolerance:
-            self._goal_reached = True
-            self._cmd_pub.publish(Twist())
-            self.get_logger().info('Goal reached, stopping.')
-            return
+        last_idx = len(self.path) - 1
+        if target_idx == last_idx:
+            gx = self.path[-1][0] - x
+            gy = self.path[-1][1] - y
+            dist_to_goal = math.hypot(gx, gy)
+            goal_local_x = math.cos(-yaw) * gx - math.sin(-yaw) * gy
+            # Stop on progress, not only distance: within tolerance, nearest to the final
+            # waypoint, or already past it (goal behind the car). Otherwise a car that
+            # misses the tolerance circle keeps circling the goal at its minimum radius.
+            if (dist_to_goal < self.goal_tolerance
+                    or self._closest_idx == last_idx
+                    or goal_local_x < 0.0):
+                self._goal_reached = True
+                self._cmd_pub.publish(Twist())
+                self.get_logger().info('Goal reached, stopping.')
+                return
 
         # Heading error psi to the look-ahead point, in the vehicle frame.
         dx = target[0] - x
