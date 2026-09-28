@@ -1,12 +1,15 @@
-# Python Package
+# Launch Files
 
-This directory contains the Python implementation for the ROS 2 pure pursuit package.
+These ROS 2 launch descriptions start the pure pursuit workflow or one of its recorder nodes. Each accepts a `params_file` argument to override the corresponding parameter YAML.
 
-- `pure_pursuit_controller.py` implements the path-following node. It reads waypoint coordinates from a CSV file, subscribes to odometry, and publishes velocity commands.
-- `path_recorder.py` records odometry samples to CSV for creating a reference path or capturing an executed trajectory.
-- `evaluate_tracking.py` compares reference and actual CSV paths, computes cross-track errors, and saves a trajectory comparison plot.
-- `geometry.py` provides quaternion-to-yaw conversion.
-- `path_utils.py` calculates local path curvature and identifies curve segments.
-- `__init__.py` marks this directory as the importable `pure_pursuit` Python package.
+- `pure_pursuit.launch.py` starts the Prius Gazebo simulation from `prius_bringup`, waits five seconds by default, then starts the `pure_pursuit_controller`. The delay is configurable with `sim_startup_delay`.
+- `record_path.launch.py` starts `path_recorder` with the reference-path settings from `path_recorder_params.yaml`.
+- `record_actual_trajectory.launch.py` starts `path_recorder` with the executed-trajectory settings from `actual_trajectory_recorder_params.yaml`.
 
-The ROS executables are registered in the package setup: `pure_pursuit_controller`, `path_recorder`, and `evaluate_tracking`. Controller and recorder defaults are supplied by YAML files in `../config/`.
+Run a launch file from a sourced ROS 2 workspace, for example:
+
+```bash
+ros2 launch pure_pursuit record_path.launch.py
+```
+
+The recorder launch files expect an odometry publisher on the configured topic. Stop the recorder with Ctrl+C to write its CSV output.
